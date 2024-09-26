@@ -1,0 +1,5 @@
+/.gitenv
+.idea
+.env
+/dbdata
+/docker/.env

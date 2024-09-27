@@ -22,7 +22,7 @@ echo "Deploying application ..."
 
   php artisan migrate --force
 
-  #artisan storage:link
+  php artisan storage:link
 
   #artisan db:seed
 

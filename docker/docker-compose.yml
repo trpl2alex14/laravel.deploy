@@ -10,6 +10,7 @@ services:
     working_dir: /var/www/${SRC_PATH}
     volumes:
       - ../${SRC_PATH}:/var/www/${SRC_PATH}:cached
+      - /var/www/storage:/var/www/${SRC_PATH}/storage:cached
       - ./php/php8.1.ini:/usr/local/etc/php/php.ini
     networks:
       - app-network

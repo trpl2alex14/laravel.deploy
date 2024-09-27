@@ -49,29 +49,29 @@ jobs:
           target: ${{ env.HOST_DEPLOY_PATH }}/${{ github.sha }}
           rm: true
       - name: executing remote ssh commands
-          uses: appleboy/ssh-action@v1.0.3
-          with:
-            host: ${{ secrets.IP_HOST }}
-            username: ${{ secrets.SSH_USER }}
-            port: ${{ secrets.SSH_PORT }}
-            key: ${{ secrets.SSH_KEY }}
-            script: |
-              find ~/${{ env.HOST_DEPLOY_PATH }} -mindepth 1 -maxdepth 1 -type d -printf '%T@ %p\n' | sort -rnk1 | awk 'NR>5 { sub(/^\S+ /, "", $0); system("rm -rf \"" $0 "\"")}'
-              rm -rf ~/docker
-              ln -s ~/${{ env.HOST_DEPLOY_PATH }}/${{ github.sha }}/docker ~/docker
-              rm -rf /var/www/${{ env.SOURCE_PATH }}
-              ln -s ~/${{ env.HOST_DEPLOY_PATH }}/${{ github.sha }}/${{ env.SOURCE_PATH }} /var/www/${{ env.SOURCE_PATH }}
-              cd ~/docker
-              cp .env.example .env
-              sed -i 's/SRC_PATH=laravel/SRC_PATH=${{ env.SOURCE_PATH }}/g' .env
-              sed -i 's/DOMAIN=local.ru/DOMAIN=${{ env.DOMAIN }}/g' .env
-              sed -i 's/ADMIN_EMAIL=partner@test.ru/ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}/g' .env
-              sed -i 's/MYSQL_ROOT_PASSWORD=/MYSQL_ROOT_PASSWORD=${{ secrets.DB_PASSWORD }}/g' .env
-              sed -i 's/MYSQL_PASSWORD=/MYSQL_PASSWORD=${{ secrets.DB_PASSWORD }}/g' .env
-              docker-compose build
-              docker stop $(docker ps -a -q)
-              docker-compose up -d --remove-orphans
-              docker-compose exec app bash -c '/var/www/scripts/server_deploy.sh'
-              chmod +x ~/docker/certbot/renew-cert-ssl.sh
-              cp ~/docker/certbot/renew-cert-ssl.sh /etc/cron.monthly
-              {{ env.AFTER_RUN }}
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.IP_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            find ~/${{ env.HOST_DEPLOY_PATH }} -mindepth 1 -maxdepth 1 -type d -printf '%T@ %p\n' | sort -rnk1 | awk 'NR>5 { sub(/^\S+ /, "", $0); system("rm -rf \"" $0 "\"")}'
+            rm -rf ~/docker
+            ln -s ~/${{ env.HOST_DEPLOY_PATH }}/${{ github.sha }}/docker ~/docker
+            rm -rf /var/www/${{ env.SOURCE_PATH }}
+            ln -s ~/${{ env.HOST_DEPLOY_PATH }}/${{ github.sha }}/${{ env.SOURCE_PATH }} /var/www/${{ env.SOURCE_PATH }}
+            cd ~/docker
+            cp .env.example .env
+            sed -i 's/SRC_PATH=laravel/SRC_PATH=${{ env.SOURCE_PATH }}/g' .env
+            sed -i 's/DOMAIN=local.ru/DOMAIN=${{ env.DOMAIN }}/g' .env
+            sed -i 's/ADMIN_EMAIL=partner@test.ru/ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}/g' .env
+            sed -i 's/MYSQL_ROOT_PASSWORD=/MYSQL_ROOT_PASSWORD=${{ secrets.DB_PASSWORD }}/g' .env
+            sed -i 's/MYSQL_PASSWORD=/MYSQL_PASSWORD=${{ secrets.DB_PASSWORD }}/g' .env
+            docker-compose build
+            docker stop $(docker ps -a -q)
+            docker-compose up -d --remove-orphans
+            docker-compose exec app bash -c '/var/www/scripts/server_deploy.sh'
+            chmod +x ~/docker/certbot/renew-cert-ssl.sh
+            cp ~/docker/certbot/renew-cert-ssl.sh /etc/cron.monthly
+            {{ env.AFTER_RUN }}

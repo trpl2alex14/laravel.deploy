@@ -20,7 +20,7 @@ echo "Deploying application ..."
 
   php artisan view:cache
 
-  php artisan migrate
+  php artisan migrate --force
 
   #artisan storage:link
 

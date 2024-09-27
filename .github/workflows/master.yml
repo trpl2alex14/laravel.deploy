@@ -3,10 +3,6 @@ run-name: Deploy repositiry ${{ github.GITHUB_REPOSITORY }}
 on:
   push:
     branches: [ master ]
-env:
-  HOST_NAME: fleyt.ru
-  HOST_DEPLOY_PATH: laravel.deploy
-  SOURCE_PATH: laravel
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest

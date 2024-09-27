@@ -22,8 +22,8 @@ RUN apt-get update && apt-get install -y \
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 # Install extensions
-#RUN docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl
-RUN docker-php-ext-install pdo mbstring zip exif pcntl
+RUN docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl
+#RUN docker-php-ext-install pdo mbstring zip exif pcntl
 
 RUN apt-get update && apt-get install -y \
     imagemagick libmagickwand-dev --no-install-recommends \
@@ -41,9 +41,9 @@ RUN chmod +x /var/www/scripts/*
 
 # Configure non-root user.
 ARG PUID=1000
-ENV PUID ${PUID}
+ENV PUID=${PUID}
 ARG PGID=1000
-ENV PGID ${PGID}
+ENV PGID=${PGID}
 
 RUN groupmod -o -g ${PGID} www-data && \
     usermod -o -u ${PUID} -g www-data www-data

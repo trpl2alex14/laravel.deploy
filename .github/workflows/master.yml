@@ -62,7 +62,8 @@ jobs:
           script: |
             find ~/${{ env.HOST_DEPLOY_PATH }} -mindepth 1 -maxdepth 1 -type d -printf '%T@ %p\n' | sort -rnk1 | awk 'NR>5 { sub(/^\S+ /, "", $0); system("rm -rf \"" $0 "\"")}'
             chown 1000:1000 -R ~/${{ env.HOST_DEPLOY_PATH }}/${{ github.sha }}/${{ env.SOURCE_PATH }}
-            cp -ru ~/${{ env.HOST_DEPLOY_PATH }}/${{ github.sha }}/${{ env.SOURCE_PATH }}/storage /var/www/storage
+            cp -ru ~/${{ env.HOST_DEPLOY_PATH }}/${{ github.sha }}/${{ env.SOURCE_PATH }}/storage /var/www/
+            chown 1000:1000 -R /var/www/storage
             rm -rf ~/docker
             ln -s ~/${{ env.HOST_DEPLOY_PATH }}/${{ github.sha }}/docker ~/docker
             rm -rf /var/www/${{ env.SOURCE_PATH }}
@@ -80,6 +81,6 @@ jobs:
             docker stop $(docker ps -a -q)
             docker-compose down
             docker-compose up -d --remove-orphans
-            docker-compose exec -it app bash -c '/var/www/scripts/server_deploy.sh'
+            docker-compose exec app bash -c '/var/www/scripts/server_deploy.sh'
             chmod +x ~/docker/certbot/renew-cert-ssl.sh
             cp ~/docker/certbot/renew-cert-ssl.sh /etc/cron.monthly

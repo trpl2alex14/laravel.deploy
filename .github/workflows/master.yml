@@ -3,6 +3,10 @@ run-name: Deploy repositiry ${{ github.GITHUB_REPOSITORY }}
 on:
   push:
     branches: [ master ]
+env:
+  HOST_NAME: ${{ secrets.DOMAIN }}
+  HOST_DEPLOY_PATH: ${{ vars.HOST_DEPLOY_PATH }}
+  SOURCE_PATH: ${{ vars.SOURCE_PATH }}
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -70,7 +74,7 @@ jobs:
             cd ~/docker
             cp .env.example .env
             sed -i 's/SRC_PATH=laravel/SRC_PATH=${{ env.SOURCE_PATH }}/g' .env
-            sed -i 's/DOMAIN=local.ru/DOMAIN=${{ env.DOMAIN }}/g' .env
+            sed -i 's/DOMAIN=local.ru/DOMAIN=${{ secrets.DOMAIN }}/g' .env
             sed -i 's/ADMIN_EMAIL=partner@test.ru/ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}/g' .env
             sed -i 's/MYSQL_ROOT_PASSWORD=/MYSQL_ROOT_PASSWORD=${{ secrets.DB_PASSWORD }}/g' .env
             sed -i 's/MYSQL_PASSWORD=/MYSQL_PASSWORD=${{ secrets.DB_PASSWORD }}/g' .env

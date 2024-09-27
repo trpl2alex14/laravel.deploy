@@ -82,6 +82,6 @@ jobs:
             docker stop $(docker ps -a -q)
             docker-compose down
             docker-compose up -d --remove-orphans
-            docker-compose exec app bash -c '/var/www/scripts/server_deploy.sh'
+            docker-compose exec -T app bash -c '/var/www/scripts/server_deploy.sh'
             chmod +x ~/docker/certbot/renew-cert-ssl.sh
             cp ~/docker/certbot/renew-cert-ssl.sh /etc/cron.monthly

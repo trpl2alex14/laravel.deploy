@@ -21,7 +21,8 @@ jobs:
       - name: Install Dependencies
         run: |
           cd ${{ env.SOURCE_PATH }}
-          composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+          composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --optimize-autoloader --no-dev
+          composer dump-autoload
       - name: Setup Environment File
         run: |
           cd ${{ env.SOURCE_PATH }}
@@ -77,10 +78,10 @@ jobs:
             sed -i 's/ADMIN_EMAIL=partner@test.ru/ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}/g' .env
             sed -i 's/MYSQL_ROOT_PASSWORD=/MYSQL_ROOT_PASSWORD=${{ secrets.DB_PASSWORD }}/g' .env
             sed -i 's/MYSQL_PASSWORD=/MYSQL_PASSWORD=${{ secrets.DB_PASSWORD }}/g' .env
-            docker-compose build
-            docker stop $(docker ps -a -q)
-            docker-compose down
-            docker-compose up -d --remove-orphans
+            docker-compose build > ~/docker/build.log
+            docker stop $(docker ps -a -q) >> ~/docker/build.log
+            docker-compose down >> ~/docker/build.log
+            docker-compose up -d --remove-orphans >> ~/docker/build.log
             docker-compose exec app bash -c '/var/www/scripts/server_deploy.sh'
             chmod +x ~/docker/certbot/renew-cert-ssl.sh
             cp ~/docker/certbot/renew-cert-ssl.sh /etc/cron.monthly

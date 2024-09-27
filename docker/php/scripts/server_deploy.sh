@@ -6,10 +6,6 @@ echo "Deploying application ..."
 # Enter maintenance mode
 (php artisan down) || true
 
-  composer install --optimize-autoloader --no-dev
-
-  composer dump-autoload
-
   #php artisan key:generate
 
   php artisan config:cache

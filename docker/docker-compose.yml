@@ -9,7 +9,7 @@ services:
     tty: true
     working_dir: /var/www/${SRC_PATH}
     volumes:
-      - ../${SRC_PATH}:/var/www/${SRC_PATH}
+      - ../${SRC_PATH}:/var/www/${SRC_PATH}:cached
       - ./php/php8.1.ini:/usr/local/etc/php/php.ini
     networks:
       - app-network

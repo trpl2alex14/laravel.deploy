@@ -10,7 +10,7 @@ echo "Deploying application ..."
 
   composer dump-autoload
 
-  php artisan key:generate
+  #php artisan key:generate
 
   php artisan config:cache
 

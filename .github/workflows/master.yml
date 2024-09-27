@@ -28,6 +28,9 @@ jobs:
           cp .env.example .env
           sed -i 's/DB_USERNAME=root/DB_USERNAME=${{ secrets.DB_USERNAME }}/g' .env
           sed -i 's/DB_PASSWORD=/DB_PASSWORD=${{ secrets.DB_PASSWORD }}/g' .env
+          sed -i 's/APP_KEY=/APP_KEY=${{ secrets.APP_KEY }}/g' .env
+          sed -i 's/APP_URL=http\:\/\/localhost/APP_URL=${{ env.DOMAIN }}/g' .env
+          sed -i 's/APP_ENV=local/APP_ENV=production/g' .env
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
@@ -71,6 +74,7 @@ jobs:
             sed -i 's/MYSQL_PASSWORD=/MYSQL_PASSWORD=${{ secrets.DB_PASSWORD }}/g' .env
             docker-compose build
             docker stop $(docker ps -a -q)
+            docker-compose down
             docker-compose up -d --remove-orphans
             docker-compose exec app bash -c '/var/www/scripts/server_deploy.sh'
             chmod +x ~/docker/certbot/renew-cert-ssl.sh
